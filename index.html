@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ShopFlow | Simple E-Commerce</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="hero-panel">
+      <div class="brand">
+        <span class="brand-mark">S</span>
+        <div>
+          <h1>ShopFlow</h1>
+          <p>Starter e-commerce store with cart, admin panel, and checkout.</p>
+        </div>
+      </div>
+      <button id="themeToggle" class="theme-btn" aria-label="Toggle theme">Dark Mode</button>
+    </header>
+
+    <main>
+      <section class="login-screen" id="loginScreen">
+        <div class="login-card">
+          <h2>Welcome Back</h2>
+          <p>Choose a role and sign in to explore the store.</p>
+          <form id="loginForm">
+            <label>
+              Name
+              <input type="text" id="userName" placeholder="Enter your name" required />
+            </label>
+            <label>
+              Role
+              <select id="userRole" required>
+                <option value="user">User</option>
+                <option value="admin">Admin</option>
+              </select>
+            </label>
+            <button type="submit" class="primary-btn">Continue</button>
+          </form>
+        </div>
+      </section>
+
+      <section class="app-shell-content hidden" id="appShell">
+        <nav class="top-nav">
+          <div class="nav-left">
+            <h2 id="welcomeText">Hello, Shopper!</h2>
+            <div class="search-bar">
+              <input id="searchInput" type="search" placeholder="Search products..." />
+              <span class="search-icon">&#128269;</span>
+            </div>
+          </div>
+          <div class="nav-right">
+            <select id="categoryFilter">
+              <option value="all">All Categories</option>
+            </select>
+            <button id="showCartBtn" class="icon-btn" aria-label="Open cart">
+              <span>&#128722;</span>
+              <span class="badge" id="cartCount">0</span>
+            </button>
+            <button id="showOrdersBtn" class="secondary-btn">Order History</button>
+            <button id="signOutBtn" class="ghost-btn">Sign Out</button>
+          </div>
+        </nav>
+
+        <div class="layout-grid">
+          <aside class="sidebar">
+            <div class="card summary-card">
+              <h3>Store Summary</h3>
+              <p><strong id="productCount">0</strong> products ready to browse.</p>
+              <p><strong id="categoryCount">0</strong> categories available.</p>
+            </div>
+            <div class="card feature-card admin-only hidden" id="adminPanelCard">
+              <h3>Admin Panel</h3>
+              <p>Manage products in the store instantly.</p>
+              <button id="addProductBtn" class="primary-btn">Add New Product</button>
+            </div>
+            <div class="card feature-card">
+              <h3>Quick Tips</h3>
+              <ul>
+                <li>Search by name or description.</li>
+                <li>Use filters to narrow categories.</li>
+                <li>Click items to add to cart.</li>
+              </ul>
+            </div>
+          </aside>
+
+          <section class="content-area">
+            <div class="product-grid" id="productGrid"></div>
+          </section>
+
+          <aside class="cart-panel hidden" id="cartPanel">
+            <div class="panel-header">
+              <h3>Your Cart</h3>
+              <button class="ghost-btn" id="closeCartBtn">Close</button>
+            </div>
+            <div class="cart-items" id="cartItems"></div>
+            <div class="cart-footer">
+              <div>
+                <p>Total</p>
+                <p id="cartTotal">$0.00</p>
+              </div>
+              <button id="checkoutBtn" class="primary-btn">Checkout</button>
+            </div>
+          </aside>
+        </div>
+
+        <section class="modal hidden" id="productModal">
+          <div class="modal-card">
+            <div class="panel-header">
+              <h3 id="modalTitle">Add Product</h3>
+              <button class="ghost-btn" id="closeModalBtn">Close</button>
+            </div>
+            <form id="productForm">
+              <label>
+                Product Name
+                <input type="text" id="productName" required />
+              </label>
+              <label>
+                Category
+                <input type="text" id="productCategory" required />
+              </label>
+              <label>
+                Price
+                <input type="number" id="productPrice" min="0" step="0.01" required />
+              </label>
+              <label>
+                Image URL
+                <input type="url" id="productImage" required />
+              </label>
+              <label>
+                Description
+                <textarea id="productDescription" rows="3" required></textarea>
+              </label>
+              <label>
+                Rating
+                <input type="number" id="productRating" min="1" max="5" value="4" required />
+              </label>
+              <button type="submit" class="primary-btn">Save Product</button>
+            </form>
+          </div>
+        </section>
+
+        <section class="modal hidden" id="checkoutModal">
+          <div class="modal-card">
+            <div class="panel-header">
+              <h3>Checkout</h3>
+              <button class="ghost-btn" id="closeCheckoutBtn">Close</button>
+            </div>
+            <div class="checkout-content">
+              <div class="order-summary">
+                <h4>Order Summary</h4>
+                <div id="checkoutSummary"></div>
+                <p class="summary-total">Total: <strong id="checkoutTotal">$0.00</strong></p>
+              </div>
+              <form id="checkoutForm">
+                <label>
+                  Full Name
+                  <input type="text" id="customerName" required />
+                </label>
+                <label>
+                  Email
+                  <input type="email" id="customerEmail" required />
+                </label>
+                <label>
+                  Shipping Address
+                  <textarea id="customerAddress" rows="3" required></textarea>
+                </label>
+                <button type="submit" class="primary-btn">Place Order</button>
+              </form>
+            </div>
+          </div>
+        </section>
+
+        <section class="hidden" id="orderHistorySection">
+          <div class="panel-header">
+            <h3>Order History</h3>
+            <button class="ghost-btn" id="closeOrdersBtn">Close</button>
+          </div>
+          <div class="history-list" id="historyList"></div>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <template id="productCardTemplate">
+    <article class="product-card">
+      <div class="product-image"></div>
+      <div class="product-body">
+        <div>
+          <h3 class="product-name"></h3>
+          <div class="product-rating"></div>
+        </div>
+        <p class="product-desc"></p>
+        <div class="product-meta">
+          <p class="product-category"></p>
+          <p class="product-price"></p>
+        </div>
+      </div>
+      <div class="card-actions">
+        <button class="wishlist-btn icon-btn" type="button" aria-label="Add to wishlist">&#10084;</button>
+        <button class="add-cart-btn primary-btn" type="button">Add to Cart</button>
+      </div>
+    </article>
+  </template>
+
+  <template id="cartItemTemplate">
+    <div class="cart-item">
+      <div>
+        <h4 class="cart-item-name"></h4>
+        <p class="cart-item-meta"></p>
+      </div>
+      <div class="cart-controls">
+        <div class="quantity-controls">
+          <button class="quantity-decrease icon-btn" type="button">-</button>
+          <span class="quantity-value"></span>
+          <button class="quantity-increase icon-btn" type="button">+</button>
+        </div>
+        <button class="remove-item ghost-btn" type="button">Remove</button>
+      </div>
+    </div>
+  </template>
+
+  <script src="script.js"></script>
+</body>
+</html>
